@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Esercizio</title>
+    <style>
+      @keyframes dance {
+        0% {
+          left: 0px;
+        }
+        25% {
+          left: 2px;
+        }
+        50% {
+          left: -2px;
+        }
+        75% {
+          left: 2px;
+        }
+        100% {
+          left: 0px;
+        }
+      }
+
+      body {
+        background-color: lightgray;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      .deleteIcon {
+        position: relative;
+        width: 18px;
+        top: 0px;
+        margin-left: 5px;
+        margin-right: 5px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .deleteIcon:hover {
+        animation: dance .2s;
+      }
+
+      #newValue {
+        position: relative;
+        font-size: 1.1em;
+        height: 30px;
+        /* border: solid 4px transparent; */
+        padding: 10px;
+        height: 36px;
+      }
+
+      .element {
+        list-style: none;
+        background-color: rgb(124, 108, 138);
+        padding: 10px;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        color: white;
+        font-weight: 200;
+        font-size: 1.1em;
+        border: solid 2px transparent
+
+      }
+
+      #elementList {
+        padding: 0;
+        max-height: 400px;
+        overflow-y: scroll;
+        scrollbar-width: none;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      .container {
+        position: relative;
+        width: 400px;
+        left: calc(50% - 232px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        justify-items: center;
+        border: solid 1px darkgrey;
+        background-color: white;
+        padding: 30px;
+      }
+
+      .container div {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        justify-items: center;
+      }
+
+      #random {
+        width: 20px;
+        padding: 8px;
+        margin-bottom: 5px;
+        border-radius: 50%;
+        background-color: rgb(124, 108, 138);
+        transition: all .2s;
+      }
+
+      #random:hover{
+        transition: all .2s;
+        cursor: pointer;
+      }
+
+      #random:active{
+        transition: all .2s;
+        transform: scale(.9);
+
+      }
+
+      h2 {
+        position: relative;
+        padding-bottom: 10px;
+        font-size: 2em;
+        font-weight: 200;
+        margin-top: 15px;
+      }
+
+      #add {
+        background-color: rgb(124, 108, 138);
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        top: 1px;
+        color: white;
+        border: none;
+        text-transform: uppercase;
+        border-radius: 50%;
+        transition: all 0.2s;
+        margin-left: 10px;
+        left: 210px;
+      }
+
+      #add:hover {
+        cursor: pointer;
+        transition: all 0.2s;
+        opacity: 0.5;
+      }
+
+      .container > div:nth-child(3) {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      #dest {
+        position: relative;
+        width: 100%;
+        margin-left: 20px;
+        font-size: 1.3em;
+      }
+
+      .error {
+        animation:dance .2s;
+        border: solid 4px rgb(223, 111, 111);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Add and Randomize</h2>
+      <div>
+        <form>
+          <input type="search" id="newValue" placeholder="Write something" />
+          <input type="submit" value="+" id="add" onClick="addName(event)" />
+        </form>
+        <ul id="elementList"></ul>
+      </div>
+      <div>
+        <img src="./imgs/random.svg" id="random" onClick="random()" />
+        <input id="dest" disabled type="search" value="" />
+      </div>
+    </div>
+
+    <script>
+      var elements = document.getElementsByClassName("element");
+
+      function addName() {
+        event.preventDefault();
+        if (document.getElementById("newValue").value === "") {
+          document.getElementById("newValue").setAttribute("class","error")
+          setTimeout(() => document.getElementById("newValue").removeAttribute("class"), 300)
+          return;
+        }
+        document.getElementById("newValue").removeAttribute("class")
+        const newValue = document.getElementById("newValue").value;
+        const elementList = document.getElementById("elementList");
+        const newElement = document.createElement("li");
+        const newImage = document.createElement("img");
+        newElement.setAttribute("class", "element");
+        newElement.setAttribute("id", newValue);
+        newImage.setAttribute("src", "./imgs/trash.svg");
+        newImage.setAttribute("class", "deleteIcon");
+        newImage.setAttribute("onClick", "removeName(event)");
+        newElement.append(newImage);
+        newElement.append(newValue);
+        elementList.append(newElement);
+        document.getElementById("newValue").value = "";
+      }
+
+      function removeName(event) {
+        var temp = [...document.getElementsByClassName("element")].map(
+          (e) => e.innerText
+        );
+        temp.filter((e) => e === event.target.parentNode.id);
+        document.getElementById(event.target.parentNode.id).remove();
+      }
+
+      function random() {
+        if (!elements.length) {
+          document.getElementById("dest").value = "";
+          return;
+        }
+        const length = elements.length;
+        const randomNumber = parseInt(Math.random() * (length - 0) + 0);
+        document.getElementById("dest").value =
+          elements[randomNumber].childNodes[1].nodeValue;
+      }
+    </script>
+  </body>
+</html>
